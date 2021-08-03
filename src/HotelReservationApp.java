@@ -42,7 +42,8 @@ public class HotelReservationApp {
 
                     // ADMIN OPTIONS(1-6)
                     case "6": // 1 See all Customers
-                        System.out.println("See all customers");
+                        adminMenu.seeAllCustomers();
+                        adminMenu.getAdminMenu();
                         break;
                     case "7": // 2 See all Rooms
                         adminMenu.seeAllRooms();

@@ -1,6 +1,7 @@
 package UI;
 
 import api.AdminResource;
+import model.Customer;
 import model.IRoom;
 import model.RoomType;
 
@@ -146,5 +147,18 @@ public class AdminMenu {
             default -> throw new IllegalStateException("Unexpected value: " + input);
         };
         return output;
+    }
+
+    public void seeAllCustomers() {
+        Collection<Customer> customers = adminAPI.getAllCustomers();
+
+        if (customers.isEmpty()) {
+            System.out.println("No customers to display");
+        } else {
+            System.out.println("Customers:");
+            for (Customer customer : customers) {
+                System.out.println("First Name: " + customer.getFirstName() + ", Last Name: " + customer.getLastName() + ", Email: " + customer.getEmail());
+            }
+        }
     }
 }
