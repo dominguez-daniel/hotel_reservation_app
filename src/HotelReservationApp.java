@@ -68,7 +68,6 @@ public class HotelReservationApp {
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getLocalizedMessage());
-
             }
         }
     }
@@ -79,7 +78,7 @@ public class HotelReservationApp {
             case "ADMIN" -> adminMenu.selectOption(userInput);
             default -> throw new IllegalStateException("Unexpected value: " + menuType);
         };
-
+        System.out.println("sync");
         return output;
     }
 }
