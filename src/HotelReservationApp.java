@@ -68,6 +68,7 @@ public class HotelReservationApp {
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getLocalizedMessage());
+
             }
         }
     }
