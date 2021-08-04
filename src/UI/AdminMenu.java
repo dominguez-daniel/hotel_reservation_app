@@ -1,5 +1,7 @@
 package UI;
 
+import Helper.Helper;
+import Shared.SharedResource;
 import api.AdminResource;
 import model.Customer;
 import model.IRoom;
@@ -16,6 +18,10 @@ public class AdminMenu {
     static AdminResource adminAPI = new AdminResource();
     private final String numbersOnlyRegex = "^(\\d+)";
     private final Pattern numberPattern = Pattern.compile(numbersOnlyRegex);
+    String emailRegex = "^(.+)@(.+).com$";
+    Pattern emailPattern = Pattern.compile(emailRegex);
+    Helper helper = new Helper();
+    SharedResource sharedResource = new SharedResource();
 
     Scanner adminScanner = new Scanner(System.in);
 
@@ -115,7 +121,7 @@ public class AdminMenu {
                    roomType = mapInputToRoomType(roomTypeInput);
                    askQuestion = false;
                } else {
-                   System.out.println("Please select a valid room type: 1 for single bed, 2 for double bed");
+                   System.out.println("*Please select a valid room type: 1 for single bed, 2 for double bed*");
                }
            }
 
@@ -125,19 +131,21 @@ public class AdminMenu {
                System.out.println(ex.getLocalizedMessage());
            }
 
-           System.out.println("Would you like to add another room (y/n)");
-           addRoom = handleYesOrNoOption(adminScanner.nextLine());
+           askQuestion = true;
+           String answer = null;
+           while (askQuestion) {
+               System.out.println("Would you like to add another room (y/n)");
+               answer = adminScanner.nextLine();
+                if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("n")) {
+                    askQuestion = false;
+                }
+           }
+           addRoom = helper.handleYesOrNoOption(answer);
        }
     }
 
-    private Boolean handleYesOrNoOption(String option) {
-        Boolean output = null;
-        if (option.equalsIgnoreCase("y")) {
-            output = true;
-        } else if (option.equalsIgnoreCase("n")) {
-            output = false;
-        }
-        return output;
+    public void seeAllReservations() {
+        adminAPI.displayAllReservations();
     }
 
     private RoomType mapInputToRoomType(String input) {
@@ -157,8 +165,48 @@ public class AdminMenu {
         } else {
             System.out.println("Customers:");
             for (Customer customer : customers) {
-                System.out.println("First Name: " + customer.getFirstName() + ", Last Name: " + customer.getLastName() + ", Email: " + customer.getEmail());
+                System.out.println("Last Name: " + customer.getLastName() + ", First Name: " + customer.getFirstName() + ", Email: " + customer.getEmail());
             }
         }
+    }
+
+    public void addTestData() {
+        boolean askQuestion = false;
+
+        askQuestion = true;
+        while (askQuestion) {
+            System.out.println("What kind of data would you like to enter? (1)Customer, (2)Reservation");
+            String userInput = adminScanner.nextLine();
+
+           if (userInput.equals("1") || userInput.equals("2")) {
+               askQuestion = false;
+               if (userInput.equals("1")) {
+                   System.out.println("*Mock Customer*");
+                   sharedResource.createUserAccount();
+               } else {
+                   boolean askForEmail = true;
+                   while (askForEmail) {
+                       System.out.println("Test Customer required - Please enter test email. (1)Exit");
+                       String testEmail = adminScanner.nextLine();
+                        if (testEmail.equals("1")) {
+                            askForEmail = false;
+                        }
+                       if (emailPattern.matcher(testEmail).matches() && adminAPI.getCustomer(testEmail) != null) {
+                           askForEmail = false;
+                           System.out.println("*Create mock Room*");
+                           addARoom();
+                           System.out.println("*Create mock Reservation*");
+                           sharedResource.findAndReserveRoom();
+                       } else {
+                           System.out.println("*Invalid entry*");
+                       }
+                   }
+
+               }
+           } else {
+               System.out.println("*Please enter valid test data option*");
+           }
+        }
+
     }
 }

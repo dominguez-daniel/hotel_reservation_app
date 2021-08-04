@@ -62,8 +62,13 @@ public class ReservationService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        for (Reservation reservation : reservationCollection) {
-            System.out.println("Reservation: " + reservation.toString(this));
+        if (!reservationCollection.isEmpty()) {
+            System.out.println("*Reservations");
+            for (Reservation reservation : reservationCollection) {
+                System.out.println(reservation.toString(this));
+            }
+        } else {
+            System.out.println("There are currently no reservations");
         }
     }
 
@@ -102,7 +107,7 @@ public class ReservationService {
 
         Collection<IRoom> recommendedRooms = this.searchRooms(dates[0], dates[1]);
         if (!recommendedRooms.isEmpty()) {
-            System.out.println("RECOMMENDED ROOMS available " + this.formatDate(dates[0]) + " & " + this.formatDate(dates[1]));
+            System.out.println("***RECOMMENDED ROOMS AVAILABLE FROM: \n" + this.formatDate(dates[0]) + " - " + this.formatDate(dates[1]));
             return recommendedRooms;
         }
 

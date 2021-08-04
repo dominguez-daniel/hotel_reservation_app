@@ -1,20 +1,20 @@
 package UI;
 
+import Shared.SharedResource;
 import api.HotelResource;
-import model.RoomType;
+import model.Reservation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class MainMenu {
     HotelResource hotelResource = new HotelResource();
     String emailRegex = "^(.+)@(.+).com$";
     Pattern emailPattern = Pattern.compile(emailRegex);
-    String nameRegex = "^[A-Za-z, ]++$";
-    Pattern namePattern = Pattern.compile(nameRegex);
     Scanner hotelScanner = new Scanner(System.in);
+    SharedResource sharedResource = new SharedResource();
+    SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd, yyyy");
 
     static Map<String, String> mainMenuOptionsMap = new HashMap<>() {{
         put("1", "Find and reserve a room");
@@ -43,43 +43,42 @@ public class MainMenu {
     }
 
     public void createAnAccount() {
-        String email = null;
-        String firstName = null;
-        String lastName = null;
-        boolean askQuestion;
+        sharedResource.createUserAccount();
+    }
 
+    public void findAndReserveRoom() {
+        sharedResource.findAndReserveRoom();
+    }
 
-        askQuestion = true;
-        while (askQuestion) {
-            System.out.println("Enter email in format name@email.com");
-            email = hotelScanner.nextLine();
-            // UI validation as well as backend.
-            if (emailPattern.matcher(email).matches()) {
-                askQuestion = false;
-            }
-        }
+    public void seeAllMyReservations() {
+        boolean askQuestion = false;
 
         askQuestion = true;
-        while (askQuestion) {
-            System.out.println("First Name");
-            firstName = hotelScanner.nextLine();
-            if (namePattern.matcher(firstName).matches()) {
+        while(askQuestion) {
+            System.out.println("Please enter account email. Press 1 to exit.");
+            String userInput = hotelScanner.nextLine();
+            if (userInput.equals("1")) {
                 askQuestion = false;
+            } else {
+                if (emailPattern.matcher(userInput).matches() && hotelResource.getCustomer(userInput) != null) {
+                    askQuestion = false;
+                    Collection<Reservation> customerReservations = hotelResource.getCustomerReservations(userInput);
+                    if (customerReservations == null || customerReservations.isEmpty()) {
+                        System.out.println("You currently have no reservations");
+                    } else {
+                        System.out.println("*Your Reservations*");
+                        for (Reservation reservation : customerReservations) {
+                            System.out.println(
+                                    "Room #" + reservation.getRoom().getRoomNumber() + ", First Name: " + reservation.getCustomer().getFirstName() + ", Last Name: " + reservation.getCustomer().getLastName() +
+                                            ", Check In: " + sdf.format(reservation.getCheckInDate()) + ", Check Out: " + sdf.format(reservation.getCheckOutDate()) + ", Price: " +
+                                            reservation.getRoom().getRoomPrice()
+                            );
+                        }
+                    }
+                } else {
+                    System.out.println("*Email not found*");
+                }
             }
-        }
-
-        askQuestion = true;
-        while (askQuestion) {
-            System.out.println("Last Name");
-            lastName = hotelScanner.nextLine();
-            if (namePattern.matcher(lastName).matches()) {
-                askQuestion = false;
-            }
-        }
-        try {
-            hotelResource.createACustomer(email, firstName, lastName);
-        } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage() + ", please try again with different email.");
         }
     }
 }

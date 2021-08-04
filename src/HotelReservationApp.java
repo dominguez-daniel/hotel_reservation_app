@@ -4,17 +4,15 @@ import UI.MainMenu;
 import java.util.Scanner;
 
 public class HotelReservationApp {
-
     static MainMenu mainMenu = new MainMenu();
     static AdminMenu adminMenu = new AdminMenu();
-
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
         String menuType = "MAIN";
 
-        mainMenu.getMainMenu();
+        mainMenu.getMainMenu(); // main menu init
 
         while (!exit && scanner.hasNext()) {
             try {
@@ -23,18 +21,16 @@ public class HotelReservationApp {
                 switch (userInput) {
                     // USER OPTIONS(1-5)
                     case "1": // Find and Reserve a Room
-                        System.out.println("Find and reserve a room");
+                        mainMenu.findAndReserveRoom();
                         break;
                     case "2": // See my Reservations
-                        System.out.println("See my reservations");
+                        mainMenu.seeAllMyReservations();
                         break;
                     case "3": // Create an Account
                         mainMenu.createAnAccount();
-                        mainMenu.getMainMenu();
                         break;
                     case "4": // Admin
                         menuType = "ADMIN";
-                        adminMenu.getAdminMenu();
                         break;
                     case "5": // Exit
                         exit = true;
@@ -43,28 +39,30 @@ public class HotelReservationApp {
                     // ADMIN OPTIONS(1-6)
                     case "6": // 1 See all Customers
                         adminMenu.seeAllCustomers();
-                        adminMenu.getAdminMenu();
                         break;
                     case "7": // 2 See all Rooms
                         adminMenu.seeAllRooms();
-                        adminMenu.getAdminMenu();
                         break;
                     case "8": // 3 See all Reservations
-                        System.out.println("See all reservations");
+                        adminMenu.seeAllReservations();
                         break;
                     case "9": // 4 Add a Room
                         adminMenu.addARoom();
-                        adminMenu.getAdminMenu();
                         break;
                     case "10": // 5 Add Test Data
-                        System.out.println("add test data");
+                        adminMenu.addTestData();
                         break;
                     case "11": // 6 Back to Main Menu
                         menuType = "MAIN";
-                        mainMenu.getMainMenu();
                         break;
                     default:
                         System.out.println("Please select an option from the menu");
+                }
+
+                if (menuType.equals("MAIN")) {
+                    mainMenu.getMainMenu();
+                } else {
+                    adminMenu.getAdminMenu();
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getLocalizedMessage());
