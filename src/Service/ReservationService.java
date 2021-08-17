@@ -1,5 +1,6 @@
 package Service;
 
+import Helper.Helper;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class ReservationService {
     static Map<String, IRoom> rooms = new HashMap<>();
     static Map<String, List<Reservation>> reservations = new HashMap<>();
+    Helper helper = new Helper();
 
     public void addRoom(IRoom room) throws Exception {
         if (rooms.containsKey(room.getRoomNumber())) {
@@ -59,7 +61,7 @@ public class ReservationService {
         if (!reservationCollection.isEmpty()) {
             System.out.println("*Reservations");
             for (Reservation reservation : reservationCollection) {
-                System.out.println(reservation.toString(this));
+                System.out.println(reservation.toString(this.helper));
             }
         } else {
             System.out.println("There are currently no reservations");
@@ -87,30 +89,6 @@ public class ReservationService {
                     }
                 });
         return roomsCloneMap.values();
-    }
-
-//    private Collection<IRoom> getRecommendedRooms(Date checkInDate, Date checkOutDate) {
-//        Calendar cal = Calendar.getInstance();
-//        Date[] dates = {checkInDate, checkOutDate};
-//
-//       for (int i = 0; i < dates.length; i++) {
-//           cal.setTime(dates[i]);
-//           cal.add(Calendar.DAY_OF_MONTH, 7);
-//           dates[i] = cal.getTime();
-//       }
-//
-//        Collection<IRoom> recommendedRooms = this.searchRooms(dates[0], dates[1]);
-//        if (!recommendedRooms.isEmpty()) {
-//            System.out.println("***RECOMMENDED ROOMS AVAILABLE FROM: \n" + this.formatDate(dates[0]) + " - " + this.formatDate(dates[1]));
-//            return recommendedRooms;
-//        }
-//
-//        return recommendedRooms;
-//    }
-
-    public String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
-        return sdf.format(date);
     }
 
     /**

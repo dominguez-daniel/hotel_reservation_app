@@ -1,5 +1,6 @@
 package model;
 
+import Helper.Helper;
 import Service.ReservationService;
 
 import java.util.Date;
@@ -50,10 +51,10 @@ public class Reservation {
         this.checkOutDate = checkOutDate;
     }
 
-    public String toString(ReservationService reservationService) {
+    public String toString(Helper helper) {
         return "customer: " + this.customer
                 + ", room: " + this.room
-                + ", checkIn: " + reservationService.formatDate(this.checkInDate)
-                + ", checkOut: " + reservationService.formatDate(this.checkOutDate);
+                + ", checkIn: " + helper.formatDate(this.checkInDate)
+                + ", checkOut: " + helper.formatDate(this.checkOutDate);
     }
 }

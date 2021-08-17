@@ -85,8 +85,8 @@ public class SharedResource {
             Collection<IRoom> recommendedRooms = this.reservationService.searchRooms(dates[0], dates[1]);
 
             if (!recommendedRooms.isEmpty()) {
-                checkInStr = this.formatDate(dates[0]);
-                checkOutStr = this.formatDate(dates[1]);
+                checkInStr = this.helper.formatDate(dates[0]);
+                checkOutStr = this.helper.formatDate(dates[1]);
                 availableRooms = recommendedRooms;
                 System.out.println("Recommended rooms based on new date range: " + checkInStr + " - " + checkOutStr);
             }
@@ -172,11 +172,6 @@ public class SharedResource {
         System.out.println("Price: $" + reservation.getRoom().getRoomPrice());
         System.out.println("Check In: " + sdf.format(reservation.getCheckInDate()));
         System.out.println("Check Out: " + sdf.format(reservation.getCheckOutDate()));
-    }
-
-    public String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
-        return sdf.format(date);
     }
 
     public void createUserAccount() {
