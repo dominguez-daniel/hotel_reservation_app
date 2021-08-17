@@ -5,7 +5,6 @@ import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 

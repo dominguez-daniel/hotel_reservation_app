@@ -58,18 +58,6 @@ public class SharedResource {
             }
         }
 
-        /**
-         * findARoom could either return available rooms or an empty list.
-         * If list is empty:
-         * - add seven days to each date and run the search again
-         * - If list is still empty:
-         * -- do nothing
-         * - Else:
-         * -- Set 'isRecommended flag to be true
-         *
-         *
-         *  if book a room is true, and is recommended true, iterate through recommended rooms and create reservation
-         */
         availableRooms = hotelResource.findARoom(new Date(checkInStr), new Date(checkOutStr));
 
         if (availableRooms.isEmpty()) {
