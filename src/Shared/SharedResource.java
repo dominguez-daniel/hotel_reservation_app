@@ -1,12 +1,14 @@
 package Shared;
 
 import Helper.Helper;
+import Service.ReservationService;
 import api.HotelResource;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Scanner;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
 
 public class SharedResource {
     HotelResource hotelResource = new HotelResource();
+    ReservationService reservationService = new ReservationService();
     Scanner scanner = new Scanner(System.in);
 
     String emailRegex = "^(.+)@(.+).com$";
@@ -55,7 +58,40 @@ public class SharedResource {
             }
         }
 
+        /**
+         * findARoom could either return available rooms or an empty list.
+         * If list is empty:
+         * - add seven days to each date and run the search again
+         * - If list is still empty:
+         * -- do nothing
+         * - Else:
+         * -- Set 'isRecommended flag to be true
+         *
+         *
+         *  if book a room is true, and is recommended true, iterate through recommended rooms and create reservation
+         */
         availableRooms = hotelResource.findARoom(new Date(checkInStr), new Date(checkOutStr));
+
+        if (availableRooms.isEmpty()) {
+            Calendar cal = Calendar.getInstance();
+            Date[] dates = {new Date(checkInStr), new Date(checkOutStr)};
+
+            for (int i = 0; i < dates.length; i++) {
+                cal.setTime(dates[i]);
+                cal.add(Calendar.DAY_OF_MONTH, 7);
+                dates[i] = cal.getTime();
+            }
+
+            Collection<IRoom> recommendedRooms = this.reservationService.searchRooms(dates[0], dates[1]);
+
+            if (!recommendedRooms.isEmpty()) {
+                checkInStr = this.formatDate(dates[0]);
+                checkOutStr = this.formatDate(dates[1]);
+                availableRooms = recommendedRooms;
+                System.out.println("Recommended rooms based on new date range: " + checkInStr + " - " + checkOutStr);
+            }
+        }
+
         for (IRoom room : availableRooms) {
             System.out.println("Room #" + room.getRoomNumber() + ", Type: " + room.getRoomType() + ", Price: $" + room.getRoomPrice());
         }
@@ -136,6 +172,11 @@ public class SharedResource {
         System.out.println("Price: $" + reservation.getRoom().getRoomPrice());
         System.out.println("Check In: " + sdf.format(reservation.getCheckInDate()));
         System.out.println("Check Out: " + sdf.format(reservation.getCheckOutDate()));
+    }
+
+    public String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
+        return sdf.format(date);
     }
 
     public void createUserAccount() {

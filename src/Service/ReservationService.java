@@ -46,13 +46,7 @@ public class ReservationService {
     }
 
     public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
-        Collection<IRoom> availableRooms = this.searchRooms(checkInDate, checkOutDate);
-
-        if (availableRooms.isEmpty()) {
-            return this.getRecommendedRooms(checkInDate, checkOutDate);
-        }
-
-        return availableRooms;
+        return this.searchRooms(checkInDate, checkOutDate);
     }
 
     public void printAllReservations() {
@@ -76,7 +70,7 @@ public class ReservationService {
      * Gets all reservations and performs a search based on room availability.
      * @return - clone of rooms minus unavailable rooms.
      */
-    private Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
+    public Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
         HashMap<String, IRoom> roomsCloneMap = (HashMap<String, IRoom>) ((HashMap<String, IRoom>) rooms).clone();
 
         reservations
@@ -95,23 +89,28 @@ public class ReservationService {
         return roomsCloneMap.values();
     }
 
-    private Collection<IRoom> getRecommendedRooms(Date checkInDate, Date checkOutDate) {
-        Calendar cal = Calendar.getInstance();
-        Date[] dates = {checkInDate, checkOutDate};
+//    private Collection<IRoom> getRecommendedRooms(Date checkInDate, Date checkOutDate) {
+//        Calendar cal = Calendar.getInstance();
+//        Date[] dates = {checkInDate, checkOutDate};
+//
+//       for (int i = 0; i < dates.length; i++) {
+//           cal.setTime(dates[i]);
+//           cal.add(Calendar.DAY_OF_MONTH, 7);
+//           dates[i] = cal.getTime();
+//       }
+//
+//        Collection<IRoom> recommendedRooms = this.searchRooms(dates[0], dates[1]);
+//        if (!recommendedRooms.isEmpty()) {
+//            System.out.println("***RECOMMENDED ROOMS AVAILABLE FROM: \n" + this.formatDate(dates[0]) + " - " + this.formatDate(dates[1]));
+//            return recommendedRooms;
+//        }
+//
+//        return recommendedRooms;
+//    }
 
-       for (int i = 0; i < dates.length; i++) {
-           cal.setTime(dates[i]);
-           cal.add(Calendar.DAY_OF_MONTH, 7);
-           dates[i] = cal.getTime();
-       }
-
-        Collection<IRoom> recommendedRooms = this.searchRooms(dates[0], dates[1]);
-        if (!recommendedRooms.isEmpty()) {
-            System.out.println("***RECOMMENDED ROOMS AVAILABLE FROM: \n" + this.formatDate(dates[0]) + " - " + this.formatDate(dates[1]));
-            return recommendedRooms;
-        }
-
-        return recommendedRooms;
+    public String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
+        return sdf.format(date);
     }
 
     /**
@@ -127,10 +126,5 @@ public class ReservationService {
      */
     private boolean isAvailable(Date proposedCheckIn, Date proposedCheckOut, Date resCheckIn, Date resCheckOut) {
         return !((isDateInRange(proposedCheckIn, resCheckIn, resCheckOut) || isDateInRange(proposedCheckOut, resCheckIn, resCheckOut)) || (isDateInRange(resCheckIn, proposedCheckIn, proposedCheckOut) || isDateInRange(resCheckOut, proposedCheckIn, proposedCheckOut)));
-    }
-
-    public String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
-         return sdf.format(date);
     }
 }
