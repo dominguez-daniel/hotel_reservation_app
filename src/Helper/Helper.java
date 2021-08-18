@@ -14,6 +14,7 @@ public class Helper {
         return output;
     }
 
+    // Hi there - Daniel here, I am adding this comment to assure you that this is my repo. Hope this helps!
     public String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
         return sdf.format(date);
