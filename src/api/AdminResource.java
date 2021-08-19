@@ -10,8 +10,16 @@ import model.RoomType;
 import java.util.Collection;
 
 public class AdminResource {
-    static CustomerService customerService = new CustomerService();
-    static ReservationService reservationService = new ReservationService();
+    public static AdminResource adminResource = null;
+    private final CustomerService customerService = CustomerService.getInstance();
+    private final ReservationService reservationService = ReservationService.getInstance();
+
+    public static AdminResource getInstance() {
+        if (adminResource == null) {
+            adminResource = new AdminResource();
+        }
+        return adminResource;
+    }
 
     public Customer getCustomer(String email) {
         return customerService.getCustomer(email);

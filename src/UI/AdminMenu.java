@@ -15,12 +15,12 @@ import java.util.regex.Pattern;
 
 
 public class AdminMenu {
-    static AdminResource adminAPI = new AdminResource();
+    static AdminResource adminAPI = AdminResource.getInstance();
     private final String numbersOnlyRegex = "^(\\d+)";
     private final Pattern numberPattern = Pattern.compile(numbersOnlyRegex);
     String emailRegex = "^(.+)@(.+).com$";
     Pattern emailPattern = Pattern.compile(emailRegex);
-    Helper helper = new Helper();
+    Helper helper = Helper.getInstance();
     SharedResource sharedResource = new SharedResource();
 
     Scanner adminScanner = new Scanner(System.in);

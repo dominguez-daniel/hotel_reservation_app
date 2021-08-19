@@ -10,8 +10,16 @@ import java.util.Collection;
 import java.util.Date;
 
 public class HotelResource {
-    static CustomerService customerService = new CustomerService();
-    static ReservationService reservationService = new ReservationService();
+    public static HotelResource hotelResource = null;
+    private final CustomerService customerService = CustomerService.getInstance();
+    private final ReservationService reservationService = ReservationService.getInstance();
+
+    public static HotelResource getInstance() {
+        if (hotelResource == null) {
+            hotelResource = new HotelResource();
+        }
+        return hotelResource;
+    }
 
     public Customer getCustomer(String email) {
         return customerService.getCustomer(email);

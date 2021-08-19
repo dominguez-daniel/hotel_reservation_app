@@ -7,7 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomerService {
-    static Map<String, Customer> customers = new HashMap<>();
+    public static CustomerService customerService = null;
+    private Map<String, Customer> customers = new HashMap<>();
+
+    public static CustomerService getInstance() {
+        if (customerService == null) {
+            customerService = new CustomerService();
+        }
+        return customerService;
+    }
 
     public void addCustomer(String email, String firstName, String lastName) throws Exception {
         if (customers.containsKey(email)) {

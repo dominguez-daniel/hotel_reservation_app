@@ -9,9 +9,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReservationService {
-    static Map<String, IRoom> rooms = new HashMap<>();
-    static Map<String, List<Reservation>> reservations = new HashMap<>();
-    Helper helper = new Helper();
+    public static ReservationService reservationService = null;
+    private Map<String, IRoom> rooms = new HashMap<>();
+    private Map<String, List<Reservation>> reservations = new HashMap<>();
+    Helper helper = Helper.getInstance();
+
+
+    public static ReservationService getInstance() {
+        if (reservationService == null) {
+            reservationService = new ReservationService();
+        }
+        return reservationService;
+    }
 
     public void addRoom(IRoom room) throws Exception {
         if (rooms.containsKey(room.getRoomNumber())) {

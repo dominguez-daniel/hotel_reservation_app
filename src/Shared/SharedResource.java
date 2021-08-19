@@ -15,8 +15,9 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class SharedResource {
-    HotelResource hotelResource = new HotelResource();
-    ReservationService reservationService = new ReservationService();
+    public static SharedResource sharedResource = null;
+    HotelResource hotelResource = HotelResource.getInstance();
+    ReservationService reservationService = ReservationService.getInstance();
     Scanner scanner = new Scanner(System.in);
 
     String emailRegex = "^(.+)@(.+).com$";
@@ -28,8 +29,14 @@ public class SharedResource {
     Pattern datePattern = Pattern.compile(dateRegex);
     Pattern namePattern = Pattern.compile(nameRegex);
     Collection<IRoom> availableRooms = null;
-    Helper helper = new Helper();
+    Helper helper = Helper.getInstance();
 
+    public static SharedResource getInstance() {
+        if (sharedResource == null) {
+            sharedResource = new SharedResource();
+        }
+        return sharedResource;
+    }
 
     public void findAndReserveRoom() {
         String checkInStr = null;
@@ -73,6 +80,7 @@ public class SharedResource {
             Collection<IRoom> recommendedRooms = this.reservationService.searchRooms(dates[0], dates[1]);
 
             if (!recommendedRooms.isEmpty()) {
+                System.out.println("Unfortunately, there are no available rooms for the date range: " + checkInStr + "-" + checkOutStr);
                 checkInStr = this.helper.formatDate(dates[0]);
                 checkOutStr = this.helper.formatDate(dates[1]);
                 availableRooms = recommendedRooms;
@@ -155,7 +163,7 @@ public class SharedResource {
     private void printReservationReceipt(Reservation reservation) {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd, yyyy");
         System.out.println("**Reservation**");
-        System.out.println("Name: " + reservation.getCustomer().getLastName() + " " + reservation.getCustomer().getLastName());
+        System.out.println("Name: " + reservation.getCustomer().getLastName() + " " + reservation.getCustomer().getFirstName());
         System.out.println("Room: " + reservation.getRoom().getRoomNumber());
         System.out.println("Price: $" + reservation.getRoom().getRoomPrice());
         System.out.println("Check In: " + sdf.format(reservation.getCheckInDate()));
