@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class ReservationService {
     public static ReservationService reservationService = null;
-    private Map<String, IRoom> rooms = new HashMap<>();
-    private Map<String, List<Reservation>> reservations = new HashMap<>();
+    private final Map<String, IRoom> rooms = new HashMap<>();
+    private final Map<String, List<Reservation>> reservations = new HashMap<>();
     Helper helper = Helper.getInstance();
 
 
@@ -80,7 +80,7 @@ public class ReservationService {
      * Gets all reservations and performs a search based on room availability.
      * @return - clone of rooms minus unavailable rooms.
      */
-    public Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
+        Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
         HashMap<String, IRoom> roomsCloneMap = (HashMap<String, IRoom>) ((HashMap<String, IRoom>) rooms).clone();
 
         reservations
