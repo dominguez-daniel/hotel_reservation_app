@@ -77,10 +77,12 @@ public class ReservationService {
     }
 
     /**
+     * Example of default method. https://www.baeldung.com/java-access-modifiers
+     *
      * Gets all reservations and performs a search based on room availability.
      * @return - clone of rooms minus unavailable rooms.
      */
-        Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
+    Collection<IRoom> searchRooms(Date checkInDate, Date checkOutDate) {
         HashMap<String, IRoom> roomsCloneMap = (HashMap<String, IRoom>) ((HashMap<String, IRoom>) rooms).clone();
 
         reservations
